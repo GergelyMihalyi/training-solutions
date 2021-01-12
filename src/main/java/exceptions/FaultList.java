@@ -33,21 +33,21 @@ public class FaultList {
     private String processLine(String line) {
         ProcessingResult processResult = ProcessingResult.NO_ERROR;
         String[] parts = line.split(SEPARATOR);
-        if (commentCheck(parts[SERIAL_NUMBER])) {
+        if (isComment(parts[SERIAL_NUMBER])) {
             return null;
         }
         if (wordCountError(parts)) {
             return parts[SERIAL_NUMBER] + "," + ProcessingResult.WORD_COUNT_ERROR.getErrorCode();
         }
 
-        boolean valueError = valueError(parts[MEASUREMENT_VALUE]);
-        boolean dateError = dateError(parts[MEASUREMENT_DATE]);
+        boolean valueError = isValueValid(parts[MEASUREMENT_VALUE]);
+        boolean dateError = isDateValid(parts[MEASUREMENT_DATE]);
 
-        if (valueError && dateError) {
+        if (!valueError && !dateError) {
             processResult = ProcessingResult.VALUE_AND_DATE_ERROR;
-        } else if (valueError) {
+        } else if (!valueError) {
             processResult = ProcessingResult.VALUE_ERROR;
-        } else if (dateError) {
+        } else if (!dateError) {
             processResult = ProcessingResult.DATE_ERROR;
         }
         if (processResult.getErrorCode() > 1) {
@@ -62,32 +62,34 @@ public class FaultList {
         return words.length != 3;
     }
 
-    private boolean commentCheck(String word) {
+    private boolean isComment(String word) {
         try {
             Integer.parseInt(word);
+            return false;
         } catch (NumberFormatException e) {
             return true;
         }
-        return false;
+
     }
 
-    private boolean valueError(String word) {
+    private boolean isValueValid(String word) {
         try {
             Double.parseDouble(word);
-        } catch (NumberFormatException e) {
             return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
-        return false;
     }
 
-    private boolean dateError(String word) {
+    private boolean isDateValid(String word) {
         try {
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd.");
             df.parse(word);
-        } catch (ParseException e) {
             return true;
+        } catch (ParseException e) {
+            return false;
         }
-        return false;
+
     }
 
 }
