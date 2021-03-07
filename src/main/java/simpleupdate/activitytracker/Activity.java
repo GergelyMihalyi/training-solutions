@@ -52,4 +52,14 @@ public class Activity {
     public Type getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", desc='" + desc + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }
