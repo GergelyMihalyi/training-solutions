@@ -16,23 +16,21 @@ public class Citizen {
     private static final String EMAIL_REGEX = "^(.+)@(.+)$";
 
     public Citizen(String name, String zip, int age, String email, String taj) {
-        if (isValidName(name) && isValidZip(zip) && isValidAge(age) && isValidEmail(email) && isValidTaj(taj)) {
+        if (isValidName(name) && validZip(zip) != null && isValidAge(age) && isValidEmail(email) && isValidTaj(taj)) {
             this.name = name;
             this.zip = zip;
             this.age = age;
             this.email = email;
             this.taj = taj;
-
         }
-
     }
 
     public static boolean isValidName(String name) {
         return !name.isEmpty();
     }
 
-    public static boolean isValidZip(String zip) {
-        return !zip.isEmpty();
+    public static String validZip(String zip) {
+        return City.searchValidCityByZip(zip);
     }
 
     public static boolean isValidAge(int age) {
@@ -50,6 +48,11 @@ public class Citizen {
             return false;
         }
         String tajWithoutWhiteSpace = taj.replaceAll("\\s+", "");
+
+        if(tajWithoutWhiteSpace.length() < 9){
+            return false;
+        }
+
         char[] ch = new char[tajWithoutWhiteSpace.length()];
         int assistNumber;
         int sumAssist = 0;

@@ -1,7 +1,11 @@
 package covid;
 
+import simplequery.Activity;
+import simplequery.Type;
+
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +56,10 @@ public class CitizenDao {
                 Citizen citizen = new Citizen(name, zip, age, email, taj);
                 citizen.setId(rs.getLong("id"));
                 citizen.setNumberOfVaccination(rs.getInt("number_of_vaccination"));
+                citizen.setLastVaccination(rs.getTimestamp("last_vaccination").toLocalDateTime());
                 return citizen;
             }
-            throw new IllegalArgumentException("Not found");
+            return null;
         } catch (SQLException sqle) {
             throw new IllegalStateException("Cannot query", sqle);
         }
@@ -80,7 +85,7 @@ public class CitizenDao {
                 String email = rs.getString("email");
                 String taj = rs.getString("taj");
                 int age = rs.getInt("age");
-                if (Citizen.isValidName(name) && Citizen.isValidZip(zip) && Citizen.isValidAge(age) && Citizen.isValidEmail(email) && Citizen.isValidTaj(taj)) {
+                if (Citizen.isValidName(name) && Citizen.validZip(zip) != null && Citizen.isValidAge(age) && Citizen.isValidEmail(email) && Citizen.isValidTaj(taj)) {
                     Citizen citizen = new Citizen(name, zip, age, email, taj);
                     citizens.add(citizen);
                 }
@@ -102,6 +107,28 @@ public class CitizenDao {
             stmt.executeUpdate();
         } catch (SQLException se) {
             throw new IllegalStateException("Cannot update");
+        }
+    }
+
+    public List<String> reportGroupByZip() {
+        try (Connection conn = dataSource.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("select zip, COUNT(case number_of_vaccination when 1 then 1 else null end) as once_vaccinated, COUNT(case number_of_vaccination when 2 then 1 else null end) as twice_vaccinated, COUNT(case number_of_vaccination when 0 then 1 else null end) as not_vaccinated from citizens GROUP BY zip");
+        ) {
+            List<String> vaccineReport = new ArrayList<>();
+            vaccineReport.add("zip;once_vaccinated;twice_vaccinated;not_vaccinated");
+            while (rs.next()) {
+                String zip = rs.getString("zip");
+                String once = rs.getString("once_vaccinated");
+                String twice = rs.getString("twice_vaccinated");
+                String not = rs.getString("not_vaccinated");
+                String row = zip + ";" + once + ";" + twice + ";" + not + ";";
+                vaccineReport.add(row);
+            }
+
+            return  vaccineReport;
+        } catch (SQLException sqle) {
+            throw new IllegalStateException("Cannot query", sqle);
         }
     }
 }
