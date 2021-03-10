@@ -1,4 +1,4 @@
-package covid;
+package covid.Models;
 
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
@@ -13,59 +13,13 @@ public class Citizen {
     private String taj;
     private LocalDateTime lastVaccination;
     private int numberOfVaccination;
-    private static final String EMAIL_REGEX = "^(.+)@(.+)$";
 
     public Citizen(String name, String zip, int age, String email, String taj) {
-        if (isValidName(name) && validZip(zip) != null && isValidAge(age) && isValidEmail(email) && isValidTaj(taj)) {
             this.name = name;
             this.zip = zip;
             this.age = age;
             this.email = email;
             this.taj = taj;
-        }
-    }
-
-    public static boolean isValidName(String name) {
-        return !name.isEmpty();
-    }
-
-    public static String validZip(String zip) {
-        return City.searchValidCityByZip(zip);
-    }
-
-    public static boolean isValidAge(int age) {
-        return age > 10 && age < 150;
-    }
-
-    public static boolean isValidEmail(String email) {
-        Pattern pattern = Pattern.compile(EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    public static boolean isValidTaj(String taj) {
-        if (taj.isEmpty() || taj.isBlank()) {
-            return false;
-        }
-        String tajWithoutWhiteSpace = taj.replaceAll("\\s+", "");
-
-        if(tajWithoutWhiteSpace.length() < 9){
-            return false;
-        }
-
-        char[] ch = new char[tajWithoutWhiteSpace.length()];
-        int assistNumber;
-        int sumAssist = 0;
-        for (int i = 0; i < 7; i++) {
-            if (i % 2 == 0) {
-                assistNumber = (int) ch[i] * 7;
-            } else {
-                assistNumber = (int) ch[i] * 3;
-            }
-            sumAssist += assistNumber;
-        }
-
-        return sumAssist % 10 == ch[8];
     }
 
     public long getId() {

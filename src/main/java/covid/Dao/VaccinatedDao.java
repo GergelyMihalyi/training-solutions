@@ -1,17 +1,19 @@
-package covid;
+package covid.Dao;
+
+import covid.Models.Status;
+import covid.Models.TypeOfVaccination;
+import covid.Controllers.Vaccination;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class VaccinatedDao {
 
     private DataSource dataSource;
 
-    public VaccinatedDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public VaccinatedDao() {
+        this.dataSource = new DatabaseConnection().dataSource;
     }
 
     public void saveVaccinatedCitizen(Vaccination vaccination) {

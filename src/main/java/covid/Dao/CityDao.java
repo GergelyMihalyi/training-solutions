@@ -1,16 +1,16 @@
-package covid;
+package covid.Dao;
+
+import covid.Models.City;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CityDao {
 
     private DataSource dataSource;
 
-    public CityDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public CityDao() {
+        this.dataSource = new DatabaseConnection().dataSource;
     }
 
     public City findCityByZip(String zip) {

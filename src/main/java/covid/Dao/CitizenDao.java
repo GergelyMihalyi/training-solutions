@@ -1,7 +1,7 @@
-package covid;
+package covid.Dao;
 
-import simplequery.Activity;
-import simplequery.Type;
+import covid.Models.Citizen;
+import covid.Validators.CitizenValidator;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -13,8 +13,8 @@ public class CitizenDao {
 
     private DataSource dataSource;
 
-    public CitizenDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public CitizenDao() {
+        this.dataSource = new DatabaseConnection().dataSource;
     }
 
     public void saveCitizen(Citizen citizen) {
@@ -56,7 +56,8 @@ public class CitizenDao {
                 Citizen citizen = new Citizen(name, zip, age, email, taj);
                 citizen.setId(rs.getLong("id"));
                 citizen.setNumberOfVaccination(rs.getInt("number_of_vaccination"));
-                citizen.setLastVaccination(rs.getTimestamp("last_vaccination").toLocalDateTime());
+                LocalDateTime lastVaccination = rs.getTimestamp("last_vaccination") != null ? rs.getTimestamp("last_vaccination").toLocalDateTime() : null;
+                citizen.setLastVaccination(lastVaccination);
                 return citizen;
             }
             return null;
@@ -78,6 +79,7 @@ public class CitizenDao {
 
     public List<Citizen> findAndGroupByByPreparedStatement(PreparedStatement ps) {
         List<Citizen> citizens = new ArrayList<>();
+        CitizenValidator cv = new CitizenValidator();
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 String name = rs.getString("name");
@@ -85,7 +87,7 @@ public class CitizenDao {
                 String email = rs.getString("email");
                 String taj = rs.getString("taj");
                 int age = rs.getInt("age");
-                if (Citizen.isValidName(name) && Citizen.validZip(zip) != null && Citizen.isValidAge(age) && Citizen.isValidEmail(email) && Citizen.isValidTaj(taj)) {
+                if (cv.isValidName(name) && cv.validZip(zip) != null && cv.isValidAge(age) && cv.isValidEmail(email) && cv.isValidTaj(taj)) {
                     Citizen citizen = new Citizen(name, zip, age, email, taj);
                     citizens.add(citizen);
                 }
@@ -126,7 +128,7 @@ public class CitizenDao {
                 vaccineReport.add(row);
             }
 
-            return  vaccineReport;
+            return vaccineReport;
         } catch (SQLException sqle) {
             throw new IllegalStateException("Cannot query", sqle);
         }

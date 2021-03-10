@@ -1,4 +1,4 @@
-package covid;
+package covid.Dao;
 
 import org.mariadb.jdbc.MariaDbDataSource;
 

@@ -1,4 +1,7 @@
-package covid;
+package covid.Controllers;
+
+import covid.Models.Status;
+import covid.Models.TypeOfVaccination;
 
 import java.time.LocalDateTime;
 

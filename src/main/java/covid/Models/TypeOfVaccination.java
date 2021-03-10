@@ -1,4 +1,4 @@
-package covid;
+package covid.Models;
 
 public enum TypeOfVaccination {
     PFIZERBIONTECH("Pfizer-BioNtech"), MODERNA("Moderna"), ASTRAZENECA("AstraZeneca"), SZPUTNYIK("Szputynik"), SINOPHARM("Sinopharm");

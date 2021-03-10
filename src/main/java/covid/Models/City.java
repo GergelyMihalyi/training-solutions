@@ -1,4 +1,6 @@
-package covid;
+package covid.Models;
+
+import covid.Dao.CityDao;
 
 public class City {
     private String zip;
@@ -7,12 +9,6 @@ public class City {
     public City(String zip, String name) {
         this.zip = zip;
         this.name = name;
-    }
-
-    public static String searchValidCityByZip(String zip){
-        City city = new CityDao(new DatabaseConnection().dataSource).findCityByZip(zip);
-        String name = city != null ? city.getName() : null;
-        return name;
     }
 
     public String getZip() {
