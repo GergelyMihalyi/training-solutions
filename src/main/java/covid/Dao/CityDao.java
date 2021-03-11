@@ -10,7 +10,7 @@ public class CityDao {
     private DataSource dataSource;
 
     public CityDao() {
-        this.dataSource = new DatabaseConnection().dataSource;
+        this.dataSource = new DatabaseConnection().getDataSource();
     }
 
     public City findCityByZip(String zip) {

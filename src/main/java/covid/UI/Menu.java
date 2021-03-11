@@ -4,29 +4,28 @@ import covid.Controllers.CitizenFileOperation;
 import covid.Controllers.CitizenVaccination;
 import covid.Controllers.Registration;
 
-import java.util.Scanner;
-
-public class Menu {
+public class Menu extends UserInterFaceMain {
 
     public Menu() {
-        menuFunction();
+        menuUi();
     }
 
-    private void menuFunction() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(
-                "1. Regisztráció\n" +
-                "2. Tömeges regisztráció\n" +
-                "3. Generálás\n" +
-                "4. Oltás\n" +
-                "5. Oltás meghiúsulás\n" +
-                "6. Riport");
+    private void menuUi() {
+        printOutUi( "1. Regisztráció\n" +
+                            "2. Tömeges regisztráció\n" +
+                            "3. Generálás\n" +
+                            "4. Oltás\n" +
+                            "5. Oltás meghiúsulás\n" +
+                            "6. Riport");
 
         while (!scanner.hasNextInt()) {
-            System.out.println("That's not a number!");
+            printOutUi("That's not a number!\nPlease enter valid menu number:");
             scanner.next();
         }
-        int menu = scanner.nextInt();
+        menuFunction(scanner.nextInt());
+    }
+
+    private void menuFunction(int menu) {
         switch (menu) {
             case 1:
                 new Registration().citizenRegistration();
@@ -47,7 +46,8 @@ public class Menu {
                 new CitizenFileOperation().report();
                 break;
             default:
-                menuFunction();
+                printOutUi("Please enter valid menu number:");
+                menuUi();
         }
     }
 }

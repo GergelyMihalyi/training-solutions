@@ -14,7 +14,7 @@ public class CitizenDao {
     private DataSource dataSource;
 
     public CitizenDao() {
-        this.dataSource = new DatabaseConnection().dataSource;
+        this.dataSource = new DatabaseConnection().getDataSource();
     }
 
     public void saveCitizen(Citizen citizen) {

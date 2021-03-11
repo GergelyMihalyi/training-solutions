@@ -1,6 +1,5 @@
 package covid.Models;
 
-import covid.Dao.CityDao;
 
 public class City {
     private String zip;

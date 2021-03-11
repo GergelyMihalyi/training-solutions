@@ -13,7 +13,7 @@ public class VaccinatedDao {
     private DataSource dataSource;
 
     public VaccinatedDao() {
-        this.dataSource = new DatabaseConnection().dataSource;
+        this.dataSource = new DatabaseConnection().getDataSource();
     }
 
     public void saveVaccinatedCitizen(Vaccination vaccination) {
