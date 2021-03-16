@@ -1,7 +1,5 @@
 package exam03;
 
-import practice.CanoeType;
-
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
